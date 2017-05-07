@@ -611,6 +611,7 @@ td input.inline {
     z-index: 2000 !important;
 }
 
+<<<<<<< ours
 /* profile */
 
 .profile-panel table,
@@ -630,4 +631,14 @@ td input.inline {
 
 .user-toggle, .user-remove {
   cursor:pointer;
+}
+
+.pdfviewer iframe {
+    width: 100%;
+    height: calc(100vh - 140px);
+    border: 1px solid #474747;
+}
+
+#import_view {
+    height: calc(100vh - 140px);
 }
