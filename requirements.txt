@@ -27,3 +27,4 @@ shodan
 pdfkit
 pdfminer
 html2text
+readability-lxml
