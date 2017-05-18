@@ -4,6 +4,7 @@ import re
 import os
 from datetime import datetime
 
+from werkzeug.utils import secure_filename
 from wtforms import widgets, Field, StringField
 from mongoengine import *
 from flask_mongoengine.wtf import model_form
@@ -215,9 +216,7 @@ class AttachedFile(YetiDocument):
     references = IntField(default=0)
 
     @staticmethod
-    def from_upload(file):
-        sha256 = stream_sha256(file.stream)
-
+    def get_or_create(sha256, content, filename, content_type):
         try:
             return AttachedFile.objects.get(sha256=sha256)
         except DoesNotExist:
@@ -228,15 +227,27 @@ class AttachedFile(YetiDocument):
                 pass
 
             fd = open(os.path.join(STORAGE_ROOT, sha256), 'wb')
-            fd.write(file.stream.read())
+            fd.write(content.read())
             fd.close()
 
-            if file.filename:
-                f = AttachedFile(filename=file.filename, content_type=file.content_type, sha256=sha256)
+            if filename:
+                f = AttachedFile(filename=filename, content_type=content_type, sha256=sha256)
                 f.save()
                 return f
             else:
                 return None
+
+    @staticmethod
+    def from_content(content, filename, content_type):
+        sha256 = stream_sha256(content)
+
+        return AttachedFile.get_or_create(sha256, content, filename, content_type)
+
+    @staticmethod
+    def from_upload(file):
+        sha256 = stream_sha256(file.stream)
+
+        return AttachedFile.get_or_create(sha256, file.stream, file.filename, file.content_type)
 
     @property
     def filepath(self):

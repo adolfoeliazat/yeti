@@ -24,3 +24,6 @@ sphinxcontrib-httpdomain
 geoip2
 psutil
 shodan
+pdfkit
+pdfminer
+html2text
