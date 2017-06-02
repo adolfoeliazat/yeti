@@ -1,9 +1,6 @@
-from datetime import timedelta
-import re
-import logging
 import hashlib
 
-from core.analytics import ScheduledAnalytics
+from core.analytics import InlineAnalytics
 from core.database import Link
 from core.observables import Hash
 
@@ -13,16 +10,14 @@ HASH_TYPES_DICT = {'md5': hashlib.md5,
                    'sha512': hashlib.sha512}
 
 
-class HashFile(ScheduledAnalytics):
+class HashFile(InlineAnalytics):
 
     default_values = {
-        "frequency": timedelta(hours=1),
         "name": "HashFile",
         "description": "Extracts MD5, SHA1, SHA256, SHA512 hashes from file",
     }
 
     ACTS_ON = 'File'
-    EXPIRATION = None  # only run this once
 
     @staticmethod
     def each(f):
